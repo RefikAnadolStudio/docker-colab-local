@@ -1,6 +1,6 @@
-FROM nvidia/cuda:10.0-base-ubuntu18.04
+FROM nvidia/cuda:10.1-base-ubuntu18.04
 
-MAINTAINER Adrian Campos "https://github.com/adriancampos"
+MAINTAINER Alexander Morosow "https://github.com/worosom"
 
 
 # install Python
@@ -21,19 +21,23 @@ RUN ${PIP} --no-cache-dir install --upgrade \
 	
 RUN ln -s $(which ${PYTHON}) /usr/local/bin/python 
 
-	
-
-
 RUN mkdir -p /opt/colab
 
 WORKDIR /opt/colab
 
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt \
+RUN apt-get install -y cmake libgdal-dev libsndfile-dev
+
+RUN CPLUS_INCLUDE_PATH=/usr/include/gdal \
+    C_INCLUDE_PATH=/usr/include/gdal \
+    pip install -r requirements.txt \
     && pip install jupyter_http_over_ws \
     && jupyter serverextension enable --py jupyter_http_over_ws
+RUN pip install --upgrade holoviews plotly datashader panel
+RUN apt-get install -y git
+RUN pip install cirq==0.8.2 qsimcirq==0.4.1
 
-EXPOSE 8081
+EXPOSE 8888
 
-CMD ["jupyter","notebook","--NotebookApp.allow_origin='https://colab.research.google.com'","--allow-root","--port","8081","--NotebookApp.port_retries=0","--ip","0.0.0.0"]
+CMD ["jupyter","notebook","--NotebookApp.allow_origin='https://colab.research.google.com'","--allow-root","--port","8888","--NotebookApp.port_retries=0","--ip","0.0.0.0"]
