@@ -5,7 +5,7 @@ A Docker container to act as a local runtime for [Google Colab](https://colab.re
 
 ## Run
 ```bash
-$ docker run --runtime=nvidia -it --rm -p 8888:8888 refikanadolstudio/docker-colab-local:latest
+$ docker run --runtime=nvidia -it --rm -p 8888:8888 refikanadolstudio/colab-local:latest
 ```
 Or, to mount a volume so that it's accessible to colab:
 ```bash
